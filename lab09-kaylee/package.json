@@ -1,0 +1,26 @@
+{
+  "name": "lab09-kaylee",
+  "version": "1.0.0",
+  "description": "lab09 fs persistence",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "debug": "^2.6.6",
+    "fs": "^0.0.1-security",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^3.3.0"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "author": "Kaylee Alvarado",
+  "license": "MIT"
+}
