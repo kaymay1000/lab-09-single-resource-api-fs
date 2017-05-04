@@ -69,7 +69,6 @@ exports.deleteNote = function(schema, id) {
 
   if(!schema) return Promise.reject(new Error('schema required'));
   if(!id) return Promise.reject(new Error('id required'));
-  if(schema[id] !== id) Promise.reject(new Error('invalid id'));
 
   return fs.unlinkProm(`${__dirname}/../data/${id}.json`)
   .then(data => console.log(`deleteNote fs.unlinkProm`, data))
