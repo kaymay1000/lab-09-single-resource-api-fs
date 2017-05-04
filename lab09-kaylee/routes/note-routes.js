@@ -11,7 +11,6 @@ module.exports = function(router){
     if(req.url.query.id) {
       storage.fetchNote('note', req.url.query.id)
       .then(note => {
-        console.log(note, 'line 14 router.get');
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.write(JSON.stringify(note));
         res.end();
@@ -34,11 +33,9 @@ module.exports = function(router){
     debug('POST /api/note');
     try {
       let note = new Note(req.body.name, req.body.date);
-      console.log(note, 'note in router.post');
       storage.createNote('note', note)
       .then(newNote => {
         res.writeHead(201, {'Content-Type': 'application/json'});
-        console.log('inside then block post', newNote);
         res.write(JSON.stringify(newNote));
         res.end();
       });
@@ -52,13 +49,14 @@ module.exports = function(router){
 
   router.put('/api/note', function(req, res) {
     debug('PUT /api/note');
-    console.log(req.body, 'req.body put');
     try {
-      let note = new Note(req.body.name, req.body.date);
-      storage.updateNote('note', req.body.id, req.body);
-      res.writeHead(202, {'Content-Type': 'application/json'});
-      res.write(JSON.stringify(note));
-      res.end();
+      storage.updateNote('note', req.url.query.id, req.body)
+      .then(data => {
+        res.writeHead(202, {'Content-Type': 'application/json'});
+        res.write(JSON.stringify(data)); // data from .then() should be written out here
+        res.end();
+      })
+      .catch(err => console.error('Error updating note: ', err.message));
     } catch(e) {
       console.error(e);
       res.writeHead(400, {'Content-Type': 'text/plain'});
@@ -69,12 +67,14 @@ module.exports = function(router){
 
   router.delete('/api/note', function(req, res) {
     debug('DELETE /api/note');
-    console.log(req.body, 'req.body delete');
     try {
-      storage.deleteNote('note', req.url.query.id);
-      res.writeHead(204, {'Content-Type': 'application/json'});
-      res.write('note deleted');
-      res.end();
+      storage.deleteNote('note', req.url.query.id)
+      .then(() => {
+        res.writeHead(204, {'Content-Type': 'application/json'});
+        res.write('note deleted');
+        res.end();
+      })
+      .catch(err => console.error('Error deleting note: ', err.message));
     } catch(e) {
       console.error(e);
       res.writeHead(404, {'Content-Type': 'text/plain'});
