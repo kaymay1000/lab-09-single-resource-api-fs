@@ -53,7 +53,7 @@ module.exports = function(router){
       storage.updateNote('note', req.url.query.id, req.body)
       .then(data => {
         res.writeHead(202, {'Content-Type': 'application/json'});
-        res.write(JSON.stringify(data)); // data from .then() should be written out here
+        res.write(JSON.stringify(data));
         res.end();
       })
       .catch(err => console.error('Error updating note: ', err.message));
