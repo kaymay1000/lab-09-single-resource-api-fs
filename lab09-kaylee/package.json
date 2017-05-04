@@ -19,7 +19,9 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint /**",
+    "watch": "nodemon server.js"
   },
   "author": "Kaylee Alvarado",
   "license": "MIT"
