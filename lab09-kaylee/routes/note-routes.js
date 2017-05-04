@@ -29,7 +29,7 @@ module.exports = function(router){
       res.end();
     }
   });
-  
+
   router.post('/api/note', function(req, res) {
     debug('POST /api/note');
     try {
@@ -55,7 +55,7 @@ module.exports = function(router){
     console.log(req.body, 'req.body put');
     try {
       let note = new Note(req.body.name, req.body.date);
-      storage.updateNote('note', note);
+      storage.updateNote('note', req.body.id, req.body);
       res.writeHead(202, {'Content-Type': 'application/json'});
       res.write(JSON.stringify(note));
       res.end();

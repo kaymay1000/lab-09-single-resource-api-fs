@@ -46,24 +46,26 @@ exports.fetchNote = function(schema, id) {
   .catch(console.error('error reading file in fetchNote'));
 };
 
-exports.updateNote = function(schema, note) {
+exports.updateNote = function(schema, id, newNote) {
   debug('#updateNote');
 
   if(!schema) return Promise.reject(new Error('schema required'));
-  if(!note) return Promise.reject(new Error('note required'));
+  if(!newNote) return Promise.reject(new Error('new note required'));
+  if(!id) return Promise.reject(new Error('existing note not found updateNote'));
 
   let schemaName = storage[schema];
   if(!schemaName) return Promise.reject(new Error('schema not found'));
 
-  schemaName[note.id] = note;
-  if(!note) return Promise.reject(new Error('note not found updateNote'));
+  schemaName[id] = newNote;
+  console.log(newNote, 'this should be new data');
 
-  return fs.readFileProm(`${__dirname}/../data/${note.id}.json`)
+  return fs.readFileProm(`${__dirname}/../data/${id}.json`)
   .then(data => {
     let oldNote = JSON.parse(data.toString());
-    if(oldNote.name) oldNote.name = note.name;
-    if(oldNote.date) oldNote.date = note.date;
-    fs.writeFileProm(`${__dirname}/../data/${note.id}.json`, oldNote);
+    if(oldNote.name) oldNote.name = newNote.name;
+    if(oldNote.date) oldNote.date = newNote.date;
+    if(oldNote.id) oldNote.id = newNote.id;
+    fs.writeFileProm(`${__dirname}/../data/${id}.json`, JSON.stringify(newNote));
   })
   .catch(console.error('Error reading file in updateNote'));
 };
