@@ -18,12 +18,11 @@ module.exports = function(router){
       .catch(err => {
         console.error(err);
         res.writeHead(404, {'Content-Type': 'text/plain'});
-        res.write('note not found');
+        res.write('note not found router.get');
         res.end();
       });
       return;
     }
-
     res.writeHead(400, {'Content-Type': 'text/plain'});
     res.write('bad request');
     res.end();
@@ -70,15 +69,16 @@ module.exports = function(router){
     debug('DELETE /api/note');
     console.log(req.body, 'req.body delete');
     try {
-      storage.deleteNote('note', req.body.id);
+      storage.deleteNote('note', req.url.query.id);
       res.writeHead(204, {'Content-Type': 'application/json'});
       res.write('note deleted');
       res.end();
     } catch(e) {
       console.error(e);
       res.writeHead(404, {'Content-Type': 'text/plain'});
-      res.write('note not found');
+      res.write('note not found router.delete');
       res.end();
     }
+    return;
   });
 };

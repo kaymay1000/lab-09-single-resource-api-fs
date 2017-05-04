@@ -14,8 +14,6 @@ exports.createNote = function(schema, note) {
   if(!storage[schema]) storage[schema] = {};
 
   storage[schema][note.id] = note;
-  console.log(note.id, 'note.id');
-
 
   let newNote;
   return fs.writeFileProm(`${__dirname}/../data/${note.id}.json`, JSON.stringify(note))
@@ -23,12 +21,10 @@ exports.createNote = function(schema, note) {
     return fs.readFileProm(`${__dirname}/../data/${note.id}.json`)
     .then(data => {
       newNote = JSON.parse(data.toString());
-      console.log(newNote, 'inside readFileProm line 23');
     })
     .catch(err => console.error(err));
   })
   .then(() => {
-    console.log(newNote, 'line 31');
     return newNote;
   })
   .catch(err => {
@@ -46,7 +42,7 @@ exports.fetchNote = function(schema, id) {
   if(!schemaName) return Promise.reject(new Error('schema not found'));
 
   let note = schemaName[id];
-  if(!note) return Promise.reject(new Error('note note found'));
+  if(!note) return Promise.reject(new Error('note note found fetchNote'));
 
   return fs.readFileProm(`${__dirname}/../data/${id}.json`)
   .then(data => {
@@ -65,7 +61,7 @@ exports.updateNote = function(schema, note) {
   if(!schemaName) return Promise.reject(new Error('schema not found'));
 
   schemaName[note.id] = note;
-  if(!note) return Promise.reject(new Error('note not found'));
+  if(!note) return Promise.reject(new Error('note not found updateNote'));
 
   return fs.readFileProm(`${__dirname}/../data/${note.id}.json`)
   .then(data => {
@@ -84,13 +80,9 @@ exports.deleteNote = function(schema, id) {
   if(!schema) return Promise.reject(new Error('schema required'));
   if(!id) return Promise.reject(new Error('id required'));
 
-  // let schemaName = storage[schema];
-  // if(!schemaName) return Promise.reject(new Error('note not found'));
-  // delete schemaName[id];
-
   return fs.unlinkProm(`${__dirname}/../data/${id}.json`)
   .then(data => {
     console.log(`deleteNote fs.unlinkProm`, data);
   })
-  .catch(console.error(`Could not delete file`));
+  .catch(console.error(`could not delete file in fs.unlinkProm`));
 };
