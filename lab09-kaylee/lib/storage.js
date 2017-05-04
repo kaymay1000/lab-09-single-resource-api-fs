@@ -12,13 +12,28 @@ exports.createNote = function(schema, note) {
   if(!schema) return Promise.reject(new Error('schema required'));
   if(!note) return Promise.reject(new Error('note required'));
   if(!storage[schema]) storage[schema] = {};
-  storage[schema][note.id] = note;
 
-  return fs.writeFileProm(`../data/${note.id}.txt`, JSON.stringify(note))
-  .then(data => {
-    console.log('successfully writing file in createNote', data);
+  storage[schema][note.id] = note;
+  console.log(note.id, 'note.id');
+
+
+  let newNote;
+  return fs.writeFileProm(`${__dirname}/../data/${note.id}.json`, JSON.stringify(note))
+  .then(() => {
+    return fs.readFileProm(`${__dirname}/../data/${note.id}.json`)
+    .then(data => {
+      newNote = JSON.parse(data.toString());
+      console.log(newNote, 'inside readFileProm line 23');
+    })
+    .catch(err => console.error(err));
   })
-  .catch(console.error('error writing file in createNote'));
+  .then(() => {
+    console.log(newNote, 'line 31');
+    return newNote;
+  })
+  .catch(err => {
+    console.error('error writing file in createNote', err.message);
+  });
 };
 
 exports.fetchNote = function(schema, id) {
@@ -33,7 +48,7 @@ exports.fetchNote = function(schema, id) {
   let note = schemaName[id];
   if(!note) return Promise.reject(new Error('note note found'));
 
-  return fs.readFileProm(`../data/${id}.txt`)
+  return fs.readFileProm(`${__dirname}/../data/${id}.json`)
   .then(data => {
     console.log('successfully reading file in fetchNote', data);
   })
@@ -52,12 +67,12 @@ exports.updateNote = function(schema, note) {
   schemaName[note.id] = note;
   if(!note) return Promise.reject(new Error('note not found'));
 
-  return fs.readFileProm(`../data/${note.id}.txt`)
+  return fs.readFileProm(`${__dirname}/../data/${note.id}.json`)
   .then(data => {
     let oldNote = JSON.parse(data.toString());
     if(oldNote.name) oldNote.name = note.name;
     if(oldNote.date) oldNote.date = note.date;
-    fs.writeFileProm(`../data/${note.id}.txt`, oldNote);
+    fs.writeFileProm(`${__dirname}/../data/${note.id}.json`, oldNote);
   })
   .catch(console.error('Error reading file in updateNote'));
 };
@@ -69,11 +84,13 @@ exports.deleteNote = function(schema, id) {
   if(!schema) return Promise.reject(new Error('schema required'));
   if(!id) return Promise.reject(new Error('id required'));
 
-  let schemaName = storage[schema];
-  if(!schemaName) return Promise.reject(new Error('note not found'));
-  delete schemaName[id];
+  // let schemaName = storage[schema];
+  // if(!schemaName) return Promise.reject(new Error('note not found'));
+  // delete schemaName[id];
 
-  return fs.unlinkProm(`../data/${id}.txt`)
-  .then(console.log(`${id}.txt deleted successfully`))
-  .catch(console.error(`Could not delete file ${id}.txt`));
+  return fs.unlinkProm(`${__dirname}/../data/${id}.json`)
+  .then(data => {
+    console.log(`deleteNote fs.unlinkProm`, data);
+  })
+  .catch(console.error(`Could not delete file`));
 };

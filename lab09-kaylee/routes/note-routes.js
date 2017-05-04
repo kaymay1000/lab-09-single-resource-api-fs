@@ -31,17 +31,18 @@ module.exports = function(router){
 
   router.post('/api/note', function(req, res) {
     debug('POST /api/note');
-    console.log(req.body, 'req.body post');
     try {
       let note = new Note(req.body.name, req.body.date);
+      console.log(note, 'note in router.post');
       storage.createNote('note', note)
-      .then(note => {
+      .then(newNote => {
         res.writeHead(201, {'Content-Type': 'application/json'});
-        res.write(JSON.stringify(note));
+        console.log('inside then block post', newNote);
+        res.write(JSON.stringify(newNote));
         res.end();
       });
     } catch(e) {
-      console.error(e);
+      console.error(e, 'error in router.post catch');
       res.writeHead(400, {'Content-Type': 'text/plain'});
       res.write('bad request');
       res.end();
