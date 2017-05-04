@@ -11,6 +11,7 @@ module.exports = function(router){
     if(req.url.query.id) {
       storage.fetchNote('note', req.url.query.id)
       .then(note => {
+        console.log(note, 'line 14 router.get');
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.write(JSON.stringify(note));
         res.end();
@@ -21,13 +22,14 @@ module.exports = function(router){
         res.write('note not found router.get');
         res.end();
       });
-      return;
     }
-    res.writeHead(400, {'Content-Type': 'text/plain'});
-    res.write('bad request');
-    res.end();
+    else {
+      res.writeHead(400, {'Content-Type': 'text/plain'});
+      res.write('bad request');
+      res.end();
+    }
   });
-
+  
   router.post('/api/note', function(req, res) {
     debug('POST /api/note');
     try {
@@ -79,6 +81,5 @@ module.exports = function(router){
       res.write('note not found router.delete');
       res.end();
     }
-    return;
   });
 };

@@ -38,15 +38,10 @@ exports.fetchNote = function(schema, id) {
   if(!schema) return Promise.reject(new Error('schema required'));
   if(!id) return Promise.reject(new Error('id required'));
 
-  let schemaName = storage[schema];
-  if(!schemaName) return Promise.reject(new Error('schema not found'));
-
-  let note = schemaName[id];
-  if(!note) return Promise.reject(new Error('note note found fetchNote'));
-
   return fs.readFileProm(`${__dirname}/../data/${id}.json`)
   .then(data => {
     console.log('successfully reading file in fetchNote', data);
+    return JSON.parse(data.toString());
   })
   .catch(console.error('error reading file in fetchNote'));
 };
