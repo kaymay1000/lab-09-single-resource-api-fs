@@ -64,6 +64,23 @@ exports.updateNote = function(schema, id, newNote) {
   .catch(err => console.error('Error reading file in updateNote', err.message));
 };
 
+// let newNote;
+// return fs.writeFileProm(`${__dirname}/../data/${note.id}.json`, JSON.stringify(note))
+// .then(() => {
+//   return fs.readFileProm(`${__dirname}/../data/${note.id}.json`)
+//   .then(data => {
+//     newNote = JSON.parse(data.toString());
+//   })
+//   .catch(err => console.error(err));
+// })
+// .then(() => {
+//   return newNote;
+// })
+// .catch(err => {
+//   console.error('error writing file in createNote', err.message);
+// });
+// };
+
 exports.deleteNote = function(schema, id) {
   debug('#deleteNote');
 
@@ -72,5 +89,5 @@ exports.deleteNote = function(schema, id) {
 
   return fs.unlinkProm(`${__dirname}/../data/${id}.json`)
   .then(data => console.log(`deleteNote fs.unlinkProm`, data))
-  .catch(err => console.error('could not delete file', err));
+  .catch(err => console.error('could not delete file', err.message));
 };
