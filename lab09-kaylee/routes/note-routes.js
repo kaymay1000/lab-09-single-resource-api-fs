@@ -52,6 +52,7 @@ module.exports = function(router){
     try {
       storage.updateNote('note', req.url.query.id, req.body)
       .then(data => {
+        console.log(data, 'data update note');
         res.writeHead(202, {'Content-Type': 'application/json'});
         res.write(JSON.stringify(data));
         res.end();

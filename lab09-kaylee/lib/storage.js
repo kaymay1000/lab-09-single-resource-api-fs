@@ -52,14 +52,18 @@ exports.updateNote = function(schema, id, newNote) {
   if(!schema) return Promise.reject(new Error('schema required'));
   if(!newNote) return Promise.reject(new Error('new note required'));
   if(!id) return Promise.reject(new Error('existing note not found'));
+  let note;
 
   return fs.readFileProm(`${__dirname}/../data/${id}.json`)
   .then(data => {
-    let oldNote = JSON.parse(data.toString());
-    if(oldNote.name) oldNote.name = newNote.name;
-    if(oldNote.date) oldNote.date = newNote.date;
+    note = JSON.parse(data.toString());
+    if(note.name) note.name = newNote.name;
+    if(note.date) note.date = newNote.date;
+    note = JSON.stringify(note);
 
-    return fs.writeFileProm(`${__dirname}/../data/${id}.json`, JSON.stringify(oldNote));
+    return fs.writeFileProm(`${__dirname}/../data/${id}.json`, note)
+    .then(() => note)
+    .catch(err => console.error('Error writing file in updateNote', err.message));
   })
   .catch(err => console.error('Error reading file in updateNote', err.message));
 };
